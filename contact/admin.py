@@ -4,13 +4,13 @@ from contact import models
 # Register your models here.
 @admin.register(models.Contact)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = 'id','name', 'email',
+    list_display = 'id','name', 'email', 'show',
     ordering = 'id',
     list_filter = 'created_date',
     search_fields = 'id','name', 'email',
     list_per_page = 10
     list_max_show_all = 100
-    list_display_links = 'id', 'name',
+    list_display_links = 'id', 'name', 'show',
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
