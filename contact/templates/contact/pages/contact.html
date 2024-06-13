@@ -1,9 +1,40 @@
 {% extends "global/base.html" %} {% block content %}
+<script>
+  function showPopup(message) {
+      var popup = document.getElementById("popup");
+      var overlay = document.getElementById("overlay");
+      var popupMessage = document.getElementById("popupMessage");
+
+      popupMessage.textContent = message;
+      popup.style.display = "block";
+      overlay.style.display = "block";
+  }
+
+  function closePopup() {
+      var popup = document.getElementById("popup");
+      var overlay = document.getElementById("overlay");
+
+      popup.style.display = "none";
+      overlay.style.display = "none";
+  }
+
+  window.onload = function() {
+      {% if messages %}
+          {% for message in messages %}
+              showPopup("{{ message }}");
+          {% endfor %}
+      {% endif %}
+  }
+</script>
+
 <div class="single-contact">
-  <div>
-    <img src="{{contact.photo}}" alt="photo_profile" />
-    <h1 class="single-contact-name"><b>{{contact.name}}</b></h1>
+  <h1 class="single-contact-name"><b>{{contact.name}}</b></h1>
+  {% if contact.photo %}
+  <div class="rows-div-contact">
+    <img src="{{contact.photo.url}}" alt="{{contact.name}}" />
+    <!-- <button type="button">volta</button> -->
   </div>
+  {% endif %}
   <!-- <h1 class="single-contact-name"><b>{{contact.name}}</b></h1> -->
   <p><b>ID:</b> {{contact.id}}</p>
   <p><b>E-mail:</b> {{contact.email}}</p>
@@ -11,5 +42,41 @@
   <p><b>Phone:</b> {{contact.phone}}</p>
   <p><b>Description:</b> {{contact.description}}</p>
   <p><b>Category:</b> {{contact.category.name}}</p>
+
+  <!-- <div class="contact-links">
+    <a class="btn btn-link" href="{% url 'update' contact.id %}">Editar</a>
+  </div> -->
+  <form action="{% url 'delete' contact.id %}" method="post">
+    {% csrf_token %} {% if confirmation == 'no' %}
+    <div id="overlay" onclick="closePopup()"></div>
+    <div id="popup">
+      <p id="popupMessage"></p>
+      <button
+        class="btn btn-delete"
+        onclick="closePopup()"
+        type="submit"
+        name="confirmation_del"
+        value="del"
+      >
+        Delete
+      </button>
+      <button
+        class="btn"
+        onclick="closePopup()"
+        type="submit"
+        name="confirmation_del"
+        value="cancel"
+      >
+        Fechar
+      </button>
+    </div>
+    {% else %}
+    <div class="contact-links">
+      <a class="btn" href="{% url 'update' contact.id %}">Editar</a>
+      <button class="btn btn-delete" type="submit">Delete</button>
+    </div>
+    {% endif %}
+  </form>
 </div>
+
 {% endblock content %}

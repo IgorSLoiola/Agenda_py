@@ -1,0 +1,28 @@
+{% extends "global/base.html" %} {% block content %}
+
+<h1>Login</h1>
+{% if user.is_authenticated %}
+<h2>Voce está logado como {{user.username}}</h2>
+<br />
+<a class="btn btn-delete" href="{% url 'logoff' %}" type="submit">logoff</a>
+{% else %}
+<div class="form-wrapper">
+  <form action="{{ form_action }}" method="POST">
+    {% csrf_token %}
+
+    <div class="form-content">
+      {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{field.label}}</label>
+        {{field}} {{field.errors}}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="form-content">
+      <div class="form-group">
+        <button class="btn" type="submit">Send</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endif %} {% endblock content %}
