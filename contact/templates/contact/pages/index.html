@@ -1,5 +1,6 @@
 {% extends "global/base.html" %} {% block content %} {%if page_obj%}
 <div class="responsive-table">
+  {% csrf_token %} {% if user.is_authenticated %}
   <table class="contacts-table">
     <caption class="table-caption">
       Contacts
@@ -31,6 +32,7 @@
       {%endfor%}
     </tbody>
   </table>
+  {% endif %}
 </div>
 {%else %}
 <div class="single-contact">

@@ -1,9 +1,9 @@
 {% extends "global/base.html" %} {% block content %}
-
+<div></div>
+{% if user.is_authenticated %}
 <h1>Create contact</h1>
 <div class="form-wrapper">
   <h2>Contact</h2>
-
   <form action="{{ form_action }}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
@@ -24,6 +24,7 @@
         <button class="btn" type="submit">Send</button>
       </div>
     </div>
+    {% endif %}
   </form>
 </div>
 
