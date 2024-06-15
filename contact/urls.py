@@ -11,8 +11,6 @@ urlpatterns = [
     path('contact/<int:id>/update/', views.update, name='update'),
     path('contact/<int:id>/delete/', views.delete, name='delete'),
 
-    #user
-    path('register/',views.register ,name='register'),
     #CRUD user
     path('user/register/',views.register ,name='register'),
     path('user/login/',views.login ,name='login'),

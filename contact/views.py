@@ -6,23 +6,17 @@ from django.http import Http404, HttpResponse
 from contact.models import Contact
 from django.contrib import messages, auth
 from contact.forms import contactForm, RegisterForm, loginUser
-# from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
-# from contact import models
 
-
-# Create your views here.
+#Application DEFAULT page#
 def index(request):
-    # contacts = models.Contact.objects.all().order_by('id')
     contacts = Contact.objects.filter(show=True).order_by('id')
 
     paginator = Paginator(contacts, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-
-    # print(contacts.query)
 
     context = {
         'page_obj' : page_obj,
@@ -33,15 +27,10 @@ def index(request):
         'contact/pages/index.html',
         context,
                 )
+
+#DETAIL page of the app's contacts#
 def contact(request, id):
-    #oneContact = Contact.objects.filter(pk=id).first()
-    #oneContact = get_object_or_404(Contact.objects.filter(pk=id))
     oneContact = get_object_or_404(Contact, pk=id, show=True)
-
-    # if oneContact is None:
-    #     raise Http404()
-
-    # print(contacts.query)
 
     name_contact = f'{oneContact.name}'
 
@@ -55,6 +44,7 @@ def contact(request, id):
         context,
                 )
 
+#App contact SEARCH filter#
 def search(request):
     search_value = request.GET.get('q', '').strip()
     contacts = Contact.objects.filter(show=True).filter(Q(name__icontains=search_value) | Q(email__icontains=search_value) ).order_by('id')
@@ -77,8 +67,7 @@ def search(request):
         context,
                 )
 
-##########################################CRUD#########################################################CRUD#####################
-
+#Contact Creation Crud#
 def create(request):
     form_action = reverse('create')
     if request.method == 'POST':
@@ -90,6 +79,7 @@ def create(request):
 
         if form.is_valid():
             contato = form.save()
+            messages.success(request, "Contato criando com sucesso!")
             return redirect('update', id=contato.pk)
 
         return render(
@@ -109,6 +99,7 @@ def create(request):
             context
         )
 
+#Contact update CRUD#
 def update(request, id):
     contact = get_object_or_404(Contact, pk=id, show=True)
     form_action = reverse('update', args=(id,))
@@ -121,6 +112,7 @@ def update(request, id):
 
         if form.is_valid():
             contato = form.save()
+            messages.info(request, "Contato editado com sucesso!")
             return redirect('update', id=contato.pk)
 
         return render(
@@ -140,14 +132,15 @@ def update(request, id):
             context
         )
 
+#CRUD of deleting contact#
 def delete(request, id):
     contact = get_object_or_404(Contact, pk=id, show=True)
-
     confirmation = request.POST.get('confirmation', 'no')
     confirmation_del = request.POST.get('confirmation_del')
     messages.info(request, "Deseja realmente deleta o contato?")
     if confirmation_del == 'del':
         contact.delete()
+        messages.success(request, 'Contato deletado com sucesso!')
         return redirect('index')
     
     if confirmation_del == 'cancel':
@@ -159,8 +152,7 @@ def delete(request, id):
         'confirmation': confirmation,
     })
 
-##########################################ENDCRUD#########################################################ENDCRUD#####################
-
+#application user registration#
 def register(request):
     form = RegisterForm()
     if request.method == 'POST':
@@ -174,10 +166,11 @@ def register(request):
         'form': form,
     })
 
+#application user login#
 def login(request):
-    form = loginUser()
+    form = loginUser(request)
     if request.method == 'POST':
-        form = loginUser(request.POST)
+        form = loginUser(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             auth.login(request, user)
@@ -189,18 +182,8 @@ def login(request):
         'form': form
     })
 
+#application user logout#
 def logoff(request):
     auth.logout(request)
+    messages.info(request, "Logout feito com sucesso!")
     return redirect('login')
-
-
-    # form = AuthenticationForm(request)
-    # if request.method == 'POST':
-    #     form = AuthenticationForm(request, data=request.POST)
-    #     if form.is_valid():
-    #         user = form.get_user()
-    #         messages.success(request,'Usuário registrado com sucesso!')
-
-    # return render(request, 'contact/pages/login.html', {
-    #     'form': form
-    # })

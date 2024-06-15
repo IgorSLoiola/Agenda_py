@@ -1,3 +1,21 @@
 {% if messages %} {% for message in messages %}
-<div class="message {{message.tags}}">{{message}}</div>
+<script>
+  function showNotification(message) {
+      var notification = document.getElementById("message");
+      notification.textContent = message;
+      notification.style.display = "block";
+      setTimeout(function() {
+          notification.style.display = "none";
+      }, 5000); // Ocultar após 5 segundos
+  }
+
+  window.onload = function() {
+      {% if messages %}
+          {% for message in messages %}
+              showNotification("{{ message }}");
+          {% endfor %}
+      {% endif %}
+  }
+</script>
+<div id="message" class="message {{message.tags}}"></div>
 {% endfor %} {% endif %}

@@ -16,7 +16,7 @@ class Contact(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     description = models.TextField(blank=True)
     show = models.BooleanField(default=True)
-    photo = models.ImageField(upload_to='images/%Y/%m/%d',blank=True)
+    photo = models.ImageField(upload_to='images/%Y/%m/%d' ,blank=True , null=True)
     category = models.ForeignKey(
         Category,
         on_delete= models.SET_NULL,

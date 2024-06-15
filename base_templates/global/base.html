@@ -7,7 +7,7 @@
     <title>{{title_page}} Agenda</title>
   </head>
   <body>
-    {% include 'global/_header.html' %}
+    {% include 'global/_header.html' %} {% include 'global/_message.html' %}
     <main class="content">{% block content %}{% endblock content %}</main>
     {% include 'global/_pagination.html' %}
   </body>

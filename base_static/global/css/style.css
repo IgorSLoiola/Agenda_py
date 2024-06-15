@@ -365,12 +365,48 @@ svg {
 
 .message.error {
   background-color: red;
+  color: white;
+  padding: 16px;
+  z-index: 1000;
+  border-radius: 8px;
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 
 .message.success {
   background-color: green;
+  color: white;
+  padding: 16px;
+  z-index: 1000;
+  border-radius: 8px;
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 
 .message.info {
-  background-color: aqua;
+  background-color: rgb(0, 139, 139);
+  color: white;
+  padding: 16px;
+  z-index: 1000;
+  border-radius: 8px;
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
+
+/* .message.notification {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 16px;
+  z-index: 1000;
+  border-radius: 8px;
+} */
