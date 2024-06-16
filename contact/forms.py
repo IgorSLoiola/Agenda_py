@@ -25,7 +25,10 @@ class contactForm(forms.ModelForm):
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
-    username = forms.CharField(required=True)
+    username = forms.CharField(required=True, label='Username')
+    email = forms.CharField(required=True, label='Email address')
+    password1 = forms.CharField(required=True, label='Password')
+    password2 = forms.CharField(required=True, label='Confirm the Password')
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'username', 'password1', 'password2')
@@ -61,8 +64,10 @@ class registerUpdateForm(forms.ModelForm):
             'min_length': ''
         }
     )
+    username = forms.CharField(label='Username')
+    email = forms.CharField(label='Email address')
     password1 = forms.CharField(
-        label='password',
+        label='Password',
         strip=False,
         widget=forms.PasswordInput(attrs={'autocomplete':'new-password'}),
         help_text=password_validation.password_validators_help_text_html(),
