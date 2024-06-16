@@ -9,7 +9,9 @@ from contact.forms import contactForm, RegisterForm, loginUser, registerUpdateFo
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='login')
 #Application DEFAULT page#
 def index(request):
     contacts = Contact.objects.filter(show=True).order_by('id')
@@ -67,6 +69,7 @@ def search(request):
         context,
                 )
 
+@login_required(login_url='login')
 #Contact Creation Crud#
 def create(request):
     form_action = reverse('create')
@@ -78,7 +81,9 @@ def create(request):
         }
 
         if form.is_valid():
-            contato = form.save()
+            contato = form.save(commit=False)
+            contato.owner = request.user
+            contato.save()
             messages.success(request, "Contato criando com sucesso!")
             return redirect('update', id=contato.pk)
 
@@ -99,9 +104,10 @@ def create(request):
             context
         )
 
+@login_required(login_url='login')
 #Contact update CRUD#
 def update(request, id):
-    contact = get_object_or_404(Contact, pk=id, show=True)
+    contact = get_object_or_404(Contact, pk=id, show=True, owner=request.user)
     form_action = reverse('update', args=(id,))
     if request.method == 'POST':
         form = contactForm(request.POST, request.FILES, instance=contact)
@@ -132,9 +138,10 @@ def update(request, id):
             context
         )
 
+@login_required(login_url='login')
 #CRUD of deleting contact#
 def delete(request, id):
-    contact = get_object_or_404(Contact, pk=id, show=True)
+    contact = get_object_or_404(Contact, pk=id, show=True, owner=request.user)
     confirmation = request.POST.get('confirmation', 'no')
     confirmation_del = request.POST.get('confirmation_del')
     messages.info(request, "Deseja realmente deleta o contato?")
@@ -151,6 +158,7 @@ def delete(request, id):
         'contact': contact,
         'confirmation': confirmation,
     })
+
 
 #application user registration#
 def register(request):
@@ -183,12 +191,14 @@ def login(request):
         'form': form
     })
 
+@login_required(login_url='login')
 #application user logout#
 def logoff(request):
     auth.logout(request)
     messages.info(request, "Logout feito com sucesso!")
     return redirect('login')
 
+@login_required(login_url='login')
 ##
 def updateuser(request):
     form = registerUpdateForm(instance=request.user)
@@ -197,7 +207,3 @@ def updateuser(request):
         if form.is_valid():
             form.save()
     return render(request, 'contact/pages/register.html', {'form': form, 'text': 'Update User',})
-
-#show logged in user's contacts#
-def users(request):
-    ...

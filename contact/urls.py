@@ -8,7 +8,6 @@ urlpatterns = [
     path('contact/<int:id>/detail/', views.contact, name='contact'),
     #CRUD contato
     path('contact/create/', views.create, name='create'),
-    path('contact/<int:id>/', views.users, name='users'),
     path('contact/<int:id>/update/', views.update, name='update'),
     path('contact/<int:id>/delete/', views.delete, name='delete'),
 
