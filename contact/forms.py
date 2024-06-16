@@ -40,3 +40,8 @@ class loginUser(AuthenticationForm):
     class Meta:
         model = User
         fields = ('username', 'password')
+
+class registerUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'username')

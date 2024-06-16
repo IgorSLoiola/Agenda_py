@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.http import Http404, HttpResponse
 from contact.models import Contact
 from django.contrib import messages, auth
-from contact.forms import contactForm, RegisterForm, loginUser
+from contact.forms import contactForm, RegisterForm, loginUser, registerUpdateForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
@@ -161,9 +161,10 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request,'Usuário registrado com sucesso!')
-            return redirect('register')
+            return redirect('login')
     return render(request, 'contact/pages/register.html', {
         'form': form,
+        'text': 'Create User',
     })
 
 #application user login#
@@ -187,3 +188,16 @@ def logoff(request):
     auth.logout(request)
     messages.info(request, "Logout feito com sucesso!")
     return redirect('login')
+
+##
+def updateuser(request):
+    form = registerUpdateForm(instance=request.user)
+    if request.method == 'POST':
+        form = registerUpdateForm(data=request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+    return render(request, 'contact/pages/register.html', {'form': form, 'text': 'Update User',})
+
+#show logged in user's contacts#
+def users(request):
+    ...
